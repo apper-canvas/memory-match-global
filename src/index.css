@@ -110,7 +110,8 @@ body {
   .theme-sunset {
     --color-primary: #DC2626;
     --color-secondary: #B91C1C;
-    --color-accent: #F97316;
+--color-accent: #F97316;
     --color-surface: #7C2D12;
     --color-background: #431407;
   }
+}
