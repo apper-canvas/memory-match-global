@@ -149,7 +149,7 @@ return (
         >
           <div className="flex items-center gap-2">
             <label className="text-gray-300 text-sm font-medium">Difficulty:</label>
-            <select 
+<select 
               value={difficulty}
               onChange={(e) => handleDifficultyChange(e.target.value)}
               className="bg-surface border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
@@ -162,7 +162,7 @@ return (
           
           <div className="flex items-center gap-2">
             <label className="text-gray-300 text-sm font-medium">Theme:</label>
-            <select 
+<select 
               value={theme}
               onChange={(e) => handleThemeChange(e.target.value)}
               className="bg-surface border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent"

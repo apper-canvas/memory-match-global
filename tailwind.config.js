@@ -7,12 +7,12 @@ export default {
 theme: {
     extend: {
       colors: {
-        // Default theme colors
-        primary: 'var(--color-primary, #6B46C1)',
-        secondary: 'var(--color-secondary, #9333EA)',
-        accent: 'var(--color-accent, #F59E0B)',
-        surface: 'var(--color-surface, #1F2937)',
-        background: 'var(--color-background, #111827)',
+        // Dynamic theme colors using CSS custom properties
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        background: 'rgb(var(--color-background) / <alpha-value>)',
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',
