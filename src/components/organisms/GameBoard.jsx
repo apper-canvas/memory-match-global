@@ -5,6 +5,8 @@ import { gameService } from '@/services'
 import GameGrid from '@/components/molecules/GameGrid'
 import GameStats from '@/components/molecules/GameStats'
 import WinModal from '@/components/molecules/WinModal'
+import Button from '@/components/atoms/Button'
+import ApperIcon from '@/components/ApperIcon'
 
 const GameBoard = () => {
   const [cards, setCards] = useState([])
@@ -13,7 +15,8 @@ const GameBoard = () => {
   const [startTime, setStartTime] = useState(null)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isWon, setIsWon] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
+const [isProcessing, setIsProcessing] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
   const [difficulty, setDifficulty] = useState('easy')
   const [theme, setTheme] = useState('classic')
 // Initialize game
@@ -33,16 +36,16 @@ const GameBoard = () => {
     document.body.className = `theme-${theme}`
   }, [theme])
 
-  // Timer effect
+// Timer effect
   useEffect(() => {
     let timer
-    if (startTime && !isWon) {
+    if (startTime && !isWon && !isPaused) {
       timer = setInterval(() => {
         setElapsedTime(Math.floor((Date.now() - startTime) / 1000))
       }, 1000)
     }
     return () => clearInterval(timer)
-  }, [startTime, isWon])
+  }, [startTime, isWon, isPaused])
 
   // Initialize game on mount
   useEffect(() => {
@@ -105,6 +108,39 @@ const GameBoard = () => {
     } finally {
       setIsProcessing(false)
     }
+}
+
+  const handlePause = () => {
+    if (!startTime || isWon) return
+    
+    if (isPaused) {
+      // Resume: adjust startTime to account for paused duration
+      const pausedDuration = elapsedTime * 1000
+      setStartTime(Date.now() - pausedDuration)
+      setIsPaused(false)
+      toast.success("Game resumed!")
+    } else {
+      // Pause
+      setIsPaused(true)
+      toast.success("Game paused!")
+    }
+  }
+
+  const handleReset = () => {
+    setIsPaused(false)
+    initializeGame()
+    toast.success("Game reset!")
+  }
+
+  // Get theme-specific icons
+  const getThemeIcons = () => {
+    const iconMap = {
+      classic: { pause: isPaused ? 'Play' : 'Pause', reset: 'RotateCcw' },
+      ocean: { pause: isPaused ? 'Waves' : 'Anchor', reset: 'Shell' },
+      forest: { pause: isPaused ? 'Leaf' : 'TreePine', reset: 'Flower2' },
+      sunset: { pause: isPaused ? 'Sun' : 'Moon', reset: 'Sunrise' }
+    }
+    return iconMap[theme] || iconMap.classic
   }
 
 const handleRestart = () => {
@@ -172,6 +208,29 @@ return (
               <option value="forest">Forest</option>
               <option value="sunset">Sunset</option>
             </select>
+</div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handlePause}
+              variant="secondary"
+              size="sm"
+              disabled={!startTime || isWon}
+              className="flex items-center gap-2"
+            >
+              <ApperIcon name={getThemeIcons().pause} size={16} />
+              {isPaused ? 'Resume' : 'Pause'}
+            </Button>
+            
+            <Button
+              onClick={handleReset}
+              variant="secondary"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <ApperIcon name={getThemeIcons().reset} size={16} />
+              Reset
+            </Button>
           </div>
         </motion.div>
         
@@ -183,8 +242,9 @@ return (
 <GameGrid
           cards={cards}
           onCardClick={handleCardClick}
-          isDisabled={isProcessing || flippedCards.length >= 2}
+          isDisabled={isProcessing || flippedCards.length >= 2 || isPaused}
           difficulty={difficulty}
+        />
         />
         <WinModal
           isOpen={isWon}
