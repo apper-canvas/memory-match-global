@@ -7,7 +7,7 @@ const GameGrid = ({ cards, onCardClick, isDisabled }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="grid grid-cols-4 gap-3 max-w-md mx-auto px-4"
+className="grid grid-cols-8 gap-2 max-w-4xl mx-auto px-4"
     >
       {cards.map((card, index) => (
         <motion.div
