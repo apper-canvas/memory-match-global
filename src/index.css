@@ -82,7 +82,7 @@ body {
     perspective: 1000px;
 }
   
-/* Theme color variables */
+/* Theme color variables - optimized for performance */
   .theme-classic {
     --color-primary: 107 70 193;
     --color-secondary: 147 51 234;
@@ -113,5 +113,45 @@ body {
     --color-accent: 249 115 22;
     --color-surface: 124 45 18;
     --color-background: 67 20 7;
+  }
+
+  /* Grid optimizations for large layouts */
+  .grid-optimized {
+    will-change: transform;
+    contain: layout style paint;
+  }
+
+  /* Improved responsive grid classes */
+  .grid-responsive-4x6 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  
+  .grid-responsive-6x8 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  
+  .grid-responsive-8x10 {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @media (min-width: 640px) {
+    .grid-responsive-4x6 {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    
+    .grid-responsive-6x8 {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+    
+    .grid-responsive-8x10 {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 768px) {
+    .grid-responsive-8x10 {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
   }
 }

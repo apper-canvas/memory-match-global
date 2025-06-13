@@ -31,9 +31,12 @@ const [isProcessing, setIsProcessing] = useState(false)
     setIsProcessing(false)
   }, [difficulty])
 
-  // Update theme class on document body
+// Update theme class on document body - optimized
   useEffect(() => {
-    document.body.className = `theme-${theme}`
+    const themeClass = `theme-${theme}`
+    document.body.className = themeClass
+    // Force repaint for theme changes
+    document.body.offsetHeight
   }, [theme])
 
 // Timer effect
@@ -244,7 +247,6 @@ return (
           onCardClick={handleCardClick}
           isDisabled={isProcessing || flippedCards.length >= 2 || isPaused}
           difficulty={difficulty}
-        />
         />
         <WinModal
           isOpen={isWon}
