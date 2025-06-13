@@ -4,14 +4,15 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
+theme: {
     extend: {
       colors: {
-        primary: '#6B46C1',
-        secondary: '#9333EA',
-        accent: '#F59E0B',
-        surface: '#1F2937',
-        background: '#111827',
+        // Default theme colors
+        primary: 'var(--color-primary, #6B46C1)',
+        secondary: 'var(--color-secondary, #9333EA)',
+        accent: 'var(--color-accent, #F59E0B)',
+        surface: 'var(--color-surface, #1F2937)',
+        background: 'var(--color-background, #111827)',
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',

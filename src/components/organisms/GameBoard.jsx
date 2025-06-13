@@ -14,10 +14,11 @@ const GameBoard = () => {
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isWon, setIsWon] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-
-  // Initialize game
+  const [difficulty, setDifficulty] = useState('easy')
+  const [theme, setTheme] = useState('classic')
+// Initialize game
   const initializeGame = useCallback(() => {
-    const newCards = gameService.generateGameCards()
+    const newCards = gameService.generateGameCardsByDifficulty(difficulty)
     setCards(newCards)
     setFlippedCards([])
     setMoves(0)
@@ -25,7 +26,12 @@ const GameBoard = () => {
     setElapsedTime(0)
     setIsWon(false)
     setIsProcessing(false)
-  }, [])
+  }, [difficulty])
+
+  // Update theme class on document body
+  useEffect(() => {
+    document.body.className = `theme-${theme}`
+  }, [theme])
 
   // Timer effect
   useEffect(() => {
@@ -101,34 +107,85 @@ const GameBoard = () => {
     }
   }
 
-  const handleRestart = () => {
+const handleRestart = () => {
     initializeGame()
     toast.success("New game started!")
   }
 
-  return (
+  const handleDifficultyChange = (newDifficulty) => {
+    setDifficulty(newDifficulty)
+    // Auto-restart game when difficulty changes
+    setTimeout(() => {
+      const newCards = gameService.generateGameCardsByDifficulty(newDifficulty)
+      setCards(newCards)
+      setFlippedCards([])
+      setMoves(0)
+      setStartTime(null)
+      setElapsedTime(0)
+      setIsWon(false)
+      setIsProcessing(false)
+    }, 100)
+  }
+
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme)
+  }
+return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto max-w-2xl">
         <motion.h1 
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-5xl font-display text-center text-white mb-8"
+          className="text-4xl md:text-5xl font-display text-center text-white mb-6"
         >
           Memory Match
         </motion.h1>
+        
+        {/* Game Settings */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-wrap justify-center gap-4 mb-6 px-4"
+        >
+          <div className="flex items-center gap-2">
+            <label className="text-gray-300 text-sm font-medium">Difficulty:</label>
+            <select 
+              value={difficulty}
+              onChange={(e) => handleDifficultyChange(e.target.value)}
+              className="bg-surface border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            >
+              <option value="easy">Easy (4x6)</option>
+              <option value="medium">Medium (6x8)</option>
+              <option value="hard">Hard (8x10)</option>
+            </select>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <label className="text-gray-300 text-sm font-medium">Theme:</label>
+            <select 
+              value={theme}
+              onChange={(e) => handleThemeChange(e.target.value)}
+              className="bg-surface border border-gray-600 text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+            >
+              <option value="classic">Classic</option>
+              <option value="ocean">Ocean</option>
+              <option value="forest">Forest</option>
+              <option value="sunset">Sunset</option>
+            </select>
+          </div>
+        </motion.div>
         
         <GameStats 
           moves={moves}
           time={elapsedTime}
           formatTime={gameService.formatTime}
         />
-        
-        <GameGrid
+<GameGrid
           cards={cards}
           onCardClick={handleCardClick}
           isDisabled={isProcessing || flippedCards.length >= 2}
+          difficulty={difficulty}
         />
-        
         <WinModal
           isOpen={isWon}
           moves={moves}

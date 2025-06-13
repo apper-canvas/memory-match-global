@@ -3,10 +3,22 @@ import cardData from '../mockData/cards.json'
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 class GameService {
-  generateGameCards() {
+  getDifficultyConfig(difficulty = 'easy') {
+    const configs = {
+      easy: { pairs: 12, gridCols: 4 },
+      medium: { pairs: 24, gridCols: 6 },
+      hard: { pairs: 40, gridCols: 8 }
+    }
+    return configs[difficulty] || configs.easy
+  }
+
+  generateGameCardsByDifficulty(difficulty = 'easy') {
+    const config = this.getDifficultyConfig(difficulty)
+    const availableEmojis = cardData.emojis.slice(0, config.pairs)
+    
     // Create pairs of cards with emojis
     const pairs = []
-    cardData.emojis.forEach((emoji, index) => {
+    availableEmojis.forEach((emoji, index) => {
       pairs.push(
         { id: `${index}-a`, emoji, isFlipped: false, isMatched: false, position: index * 2 },
         { id: `${index}-b`, emoji, isFlipped: false, isMatched: false, position: index * 2 + 1 }
@@ -18,6 +30,10 @@ class GameService {
       ...card,
       position: index
     }))
+  }
+
+  generateGameCards() {
+    return this.generateGameCardsByDifficulty('easy')
   }
 
   shuffleArray(array) {
